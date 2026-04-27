@@ -18,7 +18,10 @@ pipeline {
         stage('Install Frontend Dependencies') {
             steps {
                 dir('frontend') {
-                    sh 'npm install'
+                    sh '''
+                    chmod +x node_modules/.bin/vite
+                    npm run build
+                    '''
                 }
             }
         }
