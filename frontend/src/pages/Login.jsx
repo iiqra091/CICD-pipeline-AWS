@@ -15,9 +15,14 @@ export default function Login() {
     try {
       const res = await API.post("/auth/login", form);
 
+      // ✅ SAVE TOKEN (MOST IMPORTANT)
+      localStorage.setItem("token", res.data.token);
+
       setPopup("Login successful");
+
       setTimeout(() => {
-        window.location.reload();
+        // ✅ PROPER REDIRECT
+        window.location.href = "/";
       }, 1000);
 
     } catch (err) {
