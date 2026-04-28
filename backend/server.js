@@ -8,9 +8,8 @@ const app = express();
 
 connectDB();
 
-// ✅ Proper CORS config (added)
 app.use(cors({
-  origin: "*",
+  origin: "http://http://13.60.56.26:3000",
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
