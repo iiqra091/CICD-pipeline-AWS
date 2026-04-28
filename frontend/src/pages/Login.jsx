@@ -2,32 +2,27 @@ import { useState } from "react";
 import API from "../api/api";
 
 export default function Login() {
-  const [isRegister, setIsRegister] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
-  const [error, setError] = useState("");
+  const [form, setForm] = useState({ email: "", password: "" });
   const [popup, setPopup] = useState("");
 
   const handleSubmit = async () => {
-    // Validation
-    if (!form.email || !form.password || (isRegister && !form.name)) {
+    if (!form.email || !form.password) {
       setPopup("⚠️ Please fill all fields");
       setTimeout(() => setPopup(""), 2000);
       return;
     }
 
     try {
-      const url = isRegister ? "/auth/register" : "/auth/login";
-      const res = await API.post(url, form);
+      const res = await API.post("/auth/login", form);
 
-      if (!isRegister) {
-        localStorage.setItem("token", res.data.token);
-        window.location.reload();
-      } else {
-        setPopup("✅ Registered successfully!");
-        setIsRegister(false);
-      }
+      // ✅ simple success (no token dependency)
+      setPopup("✅ Login successful!");
+      
+      // optional redirect
+      window.location.href = "/dashboard";
+
     } catch (err) {
-      setPopup("❌ Error: " + (err.response?.data?.message || "Something went wrong"));
+      setPopup("❌ " + (err.response?.data?.message || "Login failed"));
       setTimeout(() => setPopup(""), 2000);
     }
   };
@@ -37,14 +32,7 @@ export default function Login() {
       {popup && <div className="popup">{popup}</div>}
 
       <div className="card">
-        <h2>{isRegister ? "Register" : "Login"}</h2>
-
-        {isRegister && (
-          <input
-            placeholder="Name"
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-          />
-        )}
+        <h2>Login</h2>
 
         <input
           placeholder="Email"
@@ -57,15 +45,7 @@ export default function Login() {
           onChange={(e) => setForm({ ...form, password: e.target.value })}
         />
 
-        {error && <p className="error">{error}</p>}
-
-        <button onClick={handleSubmit}>
-          {isRegister ? "Register" : "Login"}
-        </button>
-
-        <p className="toggle" onClick={() => setIsRegister(!isRegister)}>
-          {isRegister ? "Already have account? Login" : "Create Account"}
-        </p>
+        <button onClick={handleSubmit}>Login</button>
       </div>
     </div>
   );
