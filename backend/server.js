@@ -8,18 +8,15 @@ const app = express();
 
 connectDB();
 
-// ✅ SINGLE CLEAN CORS SETUP
-const corsOptions = {
-  origin: "http://13.60.56.26:3000",
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+// ✅ Clean CORS (IMPORTANT)
+app.use(cors({
+  origin: "http://13.60.56.26:3000", // your frontend
+  methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
-};
+}));
 
-app.use(cors(corsOptions));
-
-// ✅ handle preflight properly
-app.options("*", cors(corsOptions));
+app.options("*", cors()); // preflight
 
 app.use(express.json());
 
